@@ -1,0 +1,11 @@
+create database meu_banco; -- cria nova database
+
+
+
+select tb_alunos.nome,
+tb_alunos.idade from tb_alunos
+where tb_alunos.idade<18;
+
+select tb_alunos.nome,
+tb_alunos.idade from tb_alunos
+where tb_alunos.idade>=18;
