@@ -1,0 +1,76 @@
+select tb_alunos.nome, -- mostra tabela com nome e idade
+tb_alunos.idade from tb_alunos
+where tb_alunos.idade >= 18; -- todos aqueles que são de maior
+
+select tb_alunos.nome, /* mostra tabela com nome e idade */
+tb_alunos.idade from tb_alunos
+where tb_alunos.idade < 18; -- todos aqueles que são de menor
+
+-- Outra opção
+select nome, idade
+from tb_alunos where idade < 18;
+
+select nome, idade
+from tb_alunos where idade >= 18;
+
+/* Seleciona maiores de 40 interessados em jogos ou esporte por nome, idade e interesse */
+select 
+tb_alunos.nome,
+tb_alunos.idade,
+tb_interesse.interesse -- mostre essas três informações
+from tb_alunos -- dessa tabela
+inner join tb_interesse -- junte essa tabela
+on tb_interesse.id = tb_alunos.tb_interesse -- que tem essa info
+where (tb_alunos.idade >= 40) and (tb_interesse.interesse = "Esporte"
+or tb_interesse.interesse = "Jogos"); -- e selecione essas infos para aparecerem
+
+-- Seleciona menores de 40 interessados em informática ou saúde por nome, idade e interesse
+select
+tb_alunos.nome,
+tb_alunos.idade,
+tb_interesse.interesse
+from tb_alunos
+inner join tb_interesse
+on tb_interesse.id = tb_alunos.tb_interesse
+where (tb_alunos.idade <= 40) 
+and (tb_interesse.interesse = "Informática" 
+or tb_interesse.interesse = "Saúde");
+
+/* seleciona entre 19 e 32 anos, são de BA ou SP e têm interesse em Música e Jogos */
+select
+tb_alunos.nome,
+tb_alunos.idade,
+tb_estado.estado,
+tb_interesse.interesse
+from tb_alunos
+inner join tb_interesse on tb_interesse.id = tb_alunos.tb_interesse
+inner join tb_estado on tb_estado.id = tb_alunos.tb_estado
+where (tb_alunos.idade >= 19 and tb_alunos.idade <= 32) 
+and (tb_interesse.interesse = "Música" or tb_interesse.interesse = "Jogos")
+and (tb_estado.estado = "BA" or tb_estado.estado = "SP");
+
+/* seleciona entre 19 e 32 anos, são de RR ou DF e têm interesse em Saúde e Informática */
+select
+tb_alunos.nome,
+tb_alunos.idade,
+tb_estado.estado,
+tb_interesse.interesse
+from tb_alunos
+inner join tb_interesse on tb_interesse.id = tb_alunos.tb_interesse
+inner join tb_estado on tb_estado.id = tb_alunos.tb_estado
+where (tb_alunos.idade >= 19 and tb_alunos.idade <= 32) 
+and (tb_interesse.interesse = "Saúde" or tb_interesse.interesse = "Informática")
+and (tb_estado.estado = "RR" or tb_estado.estado = "DF");
+
+-- traz quantidade de pessoas por estado 
+SELECT (tb_estado.estado), COUNT(tb_alunos.id) as alunos
+FROM tb_alunos
+inner join tb_estado  tb_estado on tb_estado.id = tb_alunos.tb_estado
+GROUP BY tb_estado;
+
+-- traz quantidade de pessoas por interesse
+
+SELECT (tb_interesse.interesse), COUNT(tb_alunos.id) as alunos
+FROM tb_alunos
+inner join tb_interesse tb_interesse on tb_interesse.id = tb_alunos.tb_interesse
+GROUP BY tb_interesse;
