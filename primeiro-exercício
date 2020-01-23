@@ -1,11 +1,100 @@
+/* Criando */
+
 create database meu_banco; -- cria nova database
 
+create table myTable( -- cria nova tabela
+id int, -- int: tipo número inteiro
+nome varchar(256), -- varchar: tipo "String"(quantidade máxima de caracteres)
+matriculado bit, -- bit: tipo boolean na forma de número (0 = true; 1 = false)
+sexo char /* char: tipo caractere */
+);
+
+create table tb_aluno( -- cria tabela com FOREIGN KEY
+id int primary key auto_increment,
+nome varchar(100),
+idade int,
+email varchar(255),
+tb_estado int not null, -- not null: não pode ser nulo
+tb_interesse int not null,
+foreign key(tb_estado) references tb_estado(id), -- foreign key() references ...(): pega a foreign key 
+foreign key(tb_interesse) references tb_interesse(id)
+);
 
 
-select tb_alunos.nome,
+/* Inserindo informação no banco de dados */
+insert into my_base.aluno (aluno.id, aluno.nome, aluno.matriculado, aluno.sexo)
+value (1, "Carol", 0, "F"); -- definindo a informação de acordo com os campos
+
+-- Inserindo dados na tabela
+insert into aluno (nome, matriculado, sexo) /* TEM QUE COLOCAR UM POR OBJ */
+values ("Fulano", 1, "M");
+
+insert into aluno (nome, matriculado, sexo)
+values ("Fulana", 0, "F");
+
+/* Consultando dados inseridos: btn direito, select rows - limit 1000 */
+-- Selecionando TODOS OS dados e fazendo eles aparecerem na lista para você ver
+select * from my_base.aluno; /* My_base: nome do banco de dados; .aluno: nome da tabela, *: todos */
+select * from tb_alunos where idade <=40; -- SELECT * FROM ... WHERE idade <=40 seleciona pela idade
+
+-- Selecionando dados específicos (nestes exs, vai aparecer apenas o nome e a idade)
+select * from tb_alunos where tb_alunos.nome="Jorden"; -- seleciona apenas aqueles que têm o nome especificado (vai aparecer todos os dados: nome, idade, e-mail, etc)
+
+select tb_alunos.nome, -- seleciona todos os nomes 
+tb_alunos.idade from tb_alunos -- from: origem
+where tb_alunos.idade<18; -- onde a idade é menor que 18
+
+select tb_alunos.nome, 
 tb_alunos.idade from tb_alunos
-where tb_alunos.idade<18;
+where tb_alunos.idade>=18; -- onde a idade é 
 
-select tb_alunos.nome,
-tb_alunos.idade from tb_alunos
-where tb_alunos.idade>=18;
+--Selecionando dados específicos a partir da letra inicial e ORDENANDO por idade
+select * from tb_aluno where nome like '%J' order by idade -- SELECT * FROM ... WHERE nome LIKE '%A' ORDER BY ...
+
+--Selecionando dados específicos e ORDENANDO idade (ordem decrescente)
+select * from tb_alunos order by idade desc; -- desc: ordem decrescente
+
+--Gerando um ID automaticamente na tabela
+alter table aluno
+add primary key auto_increment(id) -- auto_increment(): gera automaticamente o próximo id
+
+/* Ligando foreign key de uma tabela com o primary key de outra */
+inner join tb_interesse on tb_interesse.id = tb_alunos.tb_interesse -- INNER JOIN ... ON ... = ...
+
+-- Ligando foreign key de uma tabela com o primary key de outra E FILTRANDO O QUE DESEJAMOS BUSCAR
+select
+  alunos.nome,
+  alunos.idade
+  gosto.interesse,
+  uf.estado
+from tb_alunos as alunos
+inner join tb_interesse as gosto on gosto.id = alunos.tb_interesse -- INNER JOIN ... AS ... ON ... = ... 
+inner join tb_estado as uf on uf.id = alunos.tb_estado
+
+
+/* Apagando uma tabela */
+drop table aluno
+
+/* SUMMING UP...
+RAIOZINHO: EXECUTA 0 COMANDO;
+CREATE DATABASE - cria base de dados
+CREATE TABLE - cria tabela
+INT - tipo número inteiro
+VARCHAR(n) - tipo "String"(quantidade máxima de caracteres)
+BIT - bit: tipo boolean na forma de número (0 = true; 1 = false)
+NOT NULL: não pode ser nulo
+CHAR - tipo caractere
+foreign key() references ...(): pega a foreign key 
+INSERT INTO - insere informação em algum lugar
+VALUE() - define a informação no banco de dados
+SELECT * FROM ... WHERE idade <=40 seleciona pela idade
+SELECT * FROM ... WHERE nome LIKE '%A' ORDER BY ... seleciona por inicial do nome e ordena por algo
+ALTER TABLE: altera tabela
+ADD PRIMARY KEY: adiciona primary key
+AUTO_INCREMENT(ID): incrementa automaticamente o id
+INNER JOIN ... ON ... = ...: Liga foreign key de uma tabela com o primary key de outra
+INNER JOIN ... AS ... ON ... = ... : "" e filtra o que queremos buscar
+
+
+
+*/
