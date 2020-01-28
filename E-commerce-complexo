@@ -1,0 +1,315 @@
+
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema e_commerce
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema e_comerce
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema e_comerce
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `e_comerce` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `e_comerce` ;
+
+-- -----------------------------------------------------
+-- Table `e_comerce`.`usuario`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e_comerce`.`usuario` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `Nome` VARCHAR(255) NULL,
+  `us` VARCHAR(255) NULL,
+  `Senha` VARCHAR(255) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `e_comerce`.`carrinho`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e_comerce`.`carrinho` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `Qtd` INT(11) NULL,
+  `TimeOut` DATETIME NULL,
+  `usuario_id` INT(11) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_carrinho_usuario1_idx` (`usuario_id` ASC) VISIBLE,
+  CONSTRAINT `fk_carrinho_usuario1`
+    FOREIGN KEY (`usuario_id`)
+    REFERENCES `e_comerce`.`usuario` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `e_comerce`.`email`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e_comerce`.`email` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(255) NULL,
+  `Preferencial` TINYINT(1) NULL,
+  `id_usuario` INT(255) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `EMail_fk0` (`id_usuario` ASC) VISIBLE,
+  CONSTRAINT `EMail_fk0`
+    FOREIGN KEY (`id_usuario`)
+    REFERENCES `e_comerce`.`usuario` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `e_comerce`.`vendas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e_comerce`.`vendas` (
+  `id` INT(11) NOT NULL,
+  `Qtd` INT(11) NULL,
+  `DataVenda` DATE NULL,
+  `DataEntrega` DATE NULL,
+  `Valor Pago` FLOAT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `e_comerce`.`endereco`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e_comerce`.`endereco` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `Logradouro` VARCHAR(255) NULL,
+  `Numero` INT(11) NULL,
+  `Bairro` VARCHAR(255) NULL,
+  `Cidade` VARCHAR(255) NULL,
+  `Cep` BIGINT(20) NULL,
+  `UF` VARCHAR(255) NULL,
+  `usuario_id` INT(11) NULL,
+  `vendas_id` INT(11) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_endereco_usuario1_idx` (`usuario_id` ASC) VISIBLE,
+  INDEX `fk_endereco_vendas1_idx` (`vendas_id` ASC) VISIBLE,
+  CONSTRAINT `fk_endereco_usuario1`
+    FOREIGN KEY (`usuario_id`)
+    REFERENCES `e_comerce`.`usuario` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_endereco_vendas1`
+    FOREIGN KEY (`vendas_id`)
+    REFERENCES `e_comerce`.`vendas` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `e_comerce`.`perfil`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e_comerce`.`perfil` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NULL,
+  `usuario_id` INT(11) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_perfil_usuario1_idx` (`usuario_id` ASC) VISIBLE,
+  CONSTRAINT `fk_perfil_usuario1`
+    FOREIGN KEY (`usuario_id`)
+    REFERENCES `e_comerce`.`usuario` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `e_comerce`.`Categoria`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e_comerce`.`Categoria` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `Nome` VARCHAR(256) NULL,
+  `Descrição` VARCHAR(256) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `e_comerce`.`produto`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e_comerce`.`produto` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `Nome` VARCHAR(255) NULL,
+  `Descrição` VARCHAR(255) NULL,
+  `Qtd` INT(11) NULL,
+  `Lote` BIGINT(20) NULL,
+  `Valor` FLOAT NULL,
+  `CodBarras` BIGINT(20) NULL,
+  `Categoria_id` INT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_produto_Categoria1_idx` (`Categoria_id` ASC) VISIBLE,
+  CONSTRAINT `fk_produto_Categoria1`
+    FOREIGN KEY (`Categoria_id`)
+    REFERENCES `e_comerce`.`Categoria` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `e_comerce`.`telefone`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e_comerce`.`telefone` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `DDI` SMALLINT(6) NULL,
+  `DDD` SMALLINT(6) NULL,
+  `Telefone` BIGINT(20) NULL,
+  `id_usuario` INT(11) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `Telefone_fk0` (`id_usuario` ASC) VISIBLE,
+  CONSTRAINT `Telefone_fk0`
+    FOREIGN KEY (`id_usuario`)
+    REFERENCES `e_comerce`.`usuario` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `e_comerce`.`TipoTelefone`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e_comerce`.`TipoTelefone` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `Nome` VARCHAR(256) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `e_comerce`.`telefone_tipotelefone`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e_comerce`.`telefone_tipotelefone` (
+  `id_telefone` INT(11) NULL,
+  `TipoTelefone_id` INT NULL,
+  INDEX `Telefone_TipoTelefone_fk0` (`id_telefone` ASC) VISIBLE,
+  INDEX `fk_telefone_tipotelefone_TipoTelefone1_idx` (`TipoTelefone_id` ASC) VISIBLE,
+  CONSTRAINT `Telefone_TipoTelefone_fk0`
+    FOREIGN KEY (`id_telefone`)
+    REFERENCES `e_comerce`.`telefone` (`id`),
+  CONSTRAINT `fk_telefone_tipotelefone_TipoTelefone1`
+    FOREIGN KEY (`TipoTelefone_id`)
+    REFERENCES `e_comerce`.`TipoTelefone` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `e_comerce`.`vendas_produtos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e_comerce`.`vendas_produtos` (
+  `produto_id` INT(11) NULL,
+  `vendas_id` INT(11) NULL,
+  INDEX `fk_vendas_produtos_produto1_idx` (`produto_id` ASC) VISIBLE,
+  INDEX `fk_vendas_produtos_vendas1_idx` (`vendas_id` ASC) VISIBLE,
+  CONSTRAINT `fk_vendas_produtos_produto1`
+    FOREIGN KEY (`produto_id`)
+    REFERENCES `e_comerce`.`produto` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_vendas_produtos_vendas1`
+    FOREIGN KEY (`vendas_id`)
+    REFERENCES `e_comerce`.`vendas` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `e_comerce`.`acesso`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e_comerce`.`acesso` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `URL` VARCHAR(256) NULL,
+  `Descrição` VARCHAR(256) CHARACTER SET 'ascii' NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `e_comerce`.`Perfil_Acesso`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e_comerce`.`Perfil_Acesso` (
+  `perfil_id` INT(11) NULL,
+  `acesso_id` INT NULL,
+  INDEX `fk_Perfil_Acesso_perfil1_idx` (`perfil_id` ASC) VISIBLE,
+  INDEX `fk_Perfil_Acesso_acesso1_idx` (`acesso_id` ASC) VISIBLE,
+  CONSTRAINT `fk_Perfil_Acesso_perfil1`
+    FOREIGN KEY (`perfil_id`)
+    REFERENCES `e_comerce`.`perfil` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Perfil_Acesso_acesso1`
+    FOREIGN KEY (`acesso_id`)
+    REFERENCES `e_comerce`.`acesso` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `e_comerce`.`Detalhes`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e_comerce`.`Detalhes` (
+  `idDetalhes` INT NOT NULL AUTO_INCREMENT,
+  `Nome` VARCHAR(256) NULL,
+  `Valor` FLOAT NULL,
+  PRIMARY KEY (`idDetalhes`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `e_comerce`.`Carrinho_Produto`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e_comerce`.`Carrinho_Produto` (
+  `carrinho_id` INT(11) NULL,
+  `Detalhes_idDetalhes` INT NULL,
+  INDEX `fk_Carrinho_Produto_carrinho1_idx` (`carrinho_id` ASC) VISIBLE,
+  INDEX `fk_Carrinho_Produto_Detalhes1_idx` (`Detalhes_idDetalhes` ASC) VISIBLE,
+  CONSTRAINT `fk_Carrinho_Produto_carrinho1`
+    FOREIGN KEY (`carrinho_id`)
+    REFERENCES `e_comerce`.`carrinho` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Carrinho_Produto_Detalhes1`
+    FOREIGN KEY (`Detalhes_idDetalhes`)
+    REFERENCES `e_comerce`.`Detalhes` (`idDetalhes`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
