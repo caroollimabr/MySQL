@@ -1,0 +1,40 @@
+Create table Categoria (
+id int,
+nome varchar(100),
+descricao varchar(255),
+primary key (id));
+
+create table clientes (
+	  id int,
+    nome varchar(150),
+    eMail varchar(200),
+    senha varchar(12),
+    primary key(id)
+);
+
+create table produtos(
+	  id int,
+    nome varchar(50),
+    descricao varchar(255),
+    preco float,
+    idCategoria int,
+    primary key(id),
+    constraint fk_produtos_categoria
+		foreign key (idCategoria)
+		references categoria (id)
+);
+
+create table vendas (
+	  id int,
+    idProduto int,
+    idClientes int,
+    qtd int,
+    primary key (id),
+    constraint fk_vendas_Produtos
+		foreign key (idProduto)
+		references produtos (id),
+	  constraint fk_vendas_Clientes
+		foreign key (idClientes)
+    references clientes (id)
+    
+)
